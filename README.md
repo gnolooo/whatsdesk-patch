@@ -13,6 +13,7 @@ Git clone the repository and execute ```install.sh```. This will copy the script
 ```
 $ git clone https://github.com/gnolooo/whatsdesk-patch/
 $ cd whatsdesk-patch
+$ chmod +x install.sh
 $ ./install.sh
 ```
 The following times you will just have to execute ```whatsdesk-patch```.
