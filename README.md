@@ -24,6 +24,8 @@ The tray icons in the ```whatsdesk-icons``` folder are taken from [Papirus Icon 
 
 If you want to change them, you can replace them and then re-patch WhatsDesk using the script. Just make sure to make 4 icons, 2 sized 25x25 pixels and 2 sized 100x100 pixels, keeping the same name scheme.
 
+You can also change the default window size inside the script, replacing the values in lines 25-26 with your preferred ones (just make sure they are the same).
+
 Also, if you want you can create a custom ```.desktop``` file to change the application name and icon as well. Here is an example of the ```.desktop``` file:
 ```
 [Desktop Entry]
