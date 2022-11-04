@@ -1,0 +1,33 @@
+#!/bin/bash
+
+SUDO=sudo
+if [ "$(whoami)" = "root" ]; then
+    SUDO=""
+fi
+
+HOMEDIR=null
+if [ "$(whoami)" = "root" ]; then
+    HOMEDIR="/usr/local"
+else HOMEDIR="$HOME"
+fi
+
+${SUDO} echo "Patching WhatsDesk..."
+mkdir ${HOMEDIR}/whatsdesk-temp
+npx asar extract /opt/whatsdesk/resources/app.asar ${HOMEDIR}/whatsdesk-temp
+rm ${HOMEDIR}/whatsdesk-temp/electron-build/src/icon/tray-icon-*.png
+rm ${HOMEDIR}/whatsdesk-temp/src/icon/tray-icon-*.png
+cp ${HOMEDIR}/.icons/whatsdesk-icons/* ${HOMEDIR}/whatsdesk-temp/electron-build/src/icon/
+cp ${HOMEDIR}/.icons/whatsdesk-icons/* ${HOMEDIR}/whatsdesk-temp/src/icon/
+sed -i "s/$1WhatsDesk/$1WhatsApp/" ${HOMEDIR}/whatsdesk-temp/electron-build/src/components/BrowserWindow/MainBrowser.js
+sed -i "s/$1WhatsDesk/$1WhatsApp/" ${HOMEDIR}/whatsdesk-temp/src/components/BrowserWindow/MainBrowser.ts
+sed -i "s/Hide WhatsDesk/Hide WhatsApp/" ${HOMEDIR}/whatsdesk-temp/electron-build/src/components/TrayIcon/TrayIcon.js
+sed -i "s/Hide WhatsDesk/Hide WhatsApp/" ${HOMEDIR}/whatsdesk-temp/src/components/TrayIcon/TrayIcon.ts
+sed -i "s/icon,/icon,\n            width: 1150,\n            height: 700,\n            x: 195,\n            y: 90,/" ${HOMEDIR}/whatsdesk-temp/electron-build/src/components/BrowserWindow/MainBrowser.js
+sed -i "s/icon,/icon,\n            width: 1150,\n            height: 700,\n            x: 195,\n            y: 90,/" ${HOMEDIR}/whatsdesk-temp/src/components/BrowserWindow/MainBrowser.ts
+asar pack ${HOMEDIR}/whatsdesk-temp/ ${HOMEDIR}/app.asar
+${SUDO} cp /opt/whatsdesk/resources/app.asar /opt/whatsdesk/resources/app.asar.bak
+${SUDO} rm /opt/whatsdesk/resources/app.asar
+${SUDO} cp ${HOMEDIR}/app.asar /opt/whatsdesk/resources/
+rm -r ${HOMEDIR}/whatsdesk-temp/
+rm ${HOMEDIR}/app.asar
+echo Done!
